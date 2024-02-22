@@ -142,6 +142,21 @@ class User {
     return `${result.rows[0].googleID} tracking ${result.rows[0].gameID}`
   }
 
+  /**
+   * Untracks a game
+   * 
+   * Accepts {gameID, googleID, gameType}
+   * 
+   * does not return anything
+   */
+
+  static async untrack(gameID, googleID, gameType){
+    await db.query(`
+      DELETE FROM ${gameType}_users
+      WHERE google_id = $1 AND game_id = $2
+    `, [googleID,gameID])
+  }
+
 }
 
 
