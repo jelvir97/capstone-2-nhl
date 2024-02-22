@@ -1,6 +1,9 @@
 "use strict";
 
 const db = require("../db");
+const {BigQuery} =  require('@google-cloud/bigquery')
+
+const bigqueryClient = new BigQuery()
 
 const {
   NotFoundError,
@@ -12,6 +15,18 @@ const {
 /** Related functions for NHL GAMES. */
 
 class NHL_Games {
+    /** Checks if game exists */
+    static async getGame(gameID){
+        const result = await db.query(
+            `SELECT * FROM nhl_games
+            WHERE game_id = $1
+            `,
+            [gameID]
+        )
+
+        return result.rows[0]
+    }
+
     /** Add game_id to db
      * 
      *  Accepts: {game_id}
@@ -36,8 +51,21 @@ class NHL_Games {
      * Gets predictions from BigQuery model
      */
 
-    static async getPrediction ({gameID}){
+    static async getPrediction (gameID){
         //TODO
+        const query = `
+        SELECT *
+        FROM \`nhl-modeling.demo.dummy_game_data\`
+        WHERE gameId = @gameID`
+
+        const options = {
+            query: query,
+            location: 'US',
+            params:{gameID: gameID}
+        }
+        
+        const [rows] = await bigqueryClient.query(options);
+        return rows[0];
     }
 
 }
