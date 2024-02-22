@@ -7,6 +7,11 @@ const {
   BadRequestError,
   UnauthorizedError,
 } = require("../expressError");
+const NHL_Games = require('./nhlGames')
+
+const sportModels = {
+  'nhl_games': NHL_Games
+}
 
 
 /** Related functions for users. */
@@ -47,6 +52,8 @@ class User {
   /** Find all users.
    *
    * Returns [{ google_id, first_name, last_name, email, is_admin }, ...]
+   * 
+   *  FOR FUTURE ADMIN IMPLEMENTATION
    **/
 
   static async findAll() {
@@ -103,6 +110,32 @@ class User {
     const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
+  }
+
+  /**
+   * Track a game
+   * 
+   * Accepts {gameID, googleID, gameType}
+   * 
+   * RETURNS {msg: "googleID tracking gameID"}
+   */
+
+  static async track(gameID, googleID, gameType){
+    let exists = await sportModels[gameType].getGame(gameID)
+    
+    if(!exists) await sportModels[gameType].addGame({gameID})
+
+    const result = await db.query(
+      `INSERT INTO ${gameType}_users
+      (game_id,google_id)
+      VALUES
+      ($1,$2)
+      RETURNING game_id AS "gameID", google_id AS "googleID"`,
+      [gameID,googleID]
+    )
+    console.log(result.rows)
+      
+    return `${result.rows[0].googleID} tracking ${result.rows[0].gameID}`
   }
 
 }
