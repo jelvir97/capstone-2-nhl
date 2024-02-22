@@ -71,6 +71,7 @@ app.get('/',(req, res)=>{
     
     
     console.log(req.session)
+    console.log(req.user)
     req.session.views = (req.session.views || 0) + 1
    
     return res.end(req.session.views + ' views')

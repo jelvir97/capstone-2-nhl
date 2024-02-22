@@ -11,7 +11,11 @@ router.get('/login/federated/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/oauth2/redirect/google', passport.authenticate('google', {
-    successRedirect: '/',
+    successRedirect: '/login/success',
     failureRedirect: '/login'
 }));
+
+router.get('/login/success', (req, res, next)=>{
+    res.json(req.user)
+})
 module.exports = router;
