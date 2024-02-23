@@ -130,7 +130,7 @@ class User {
     if(!gameType) throw new BadRequestError('Must include gameType argument')
     let exists = await sportModels[gameType].getGame(gameID)
     
-    if(!exists) await sportModels[gameType].addGame({gameID})
+    if(!exists) await sportModels[gameType].addGame(gameID)
 
     try{
       const result = await db.query(

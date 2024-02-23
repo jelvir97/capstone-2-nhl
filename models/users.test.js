@@ -21,7 +21,7 @@ afterAll(commonAfterAll);
 
 /************************************** authenticate */
 
-/************************************** AUTH TESTS in models/auth.test.js */
+/************************************** AUTH TESTS in routes/auth.test.js */
 
 /************************************** register */
 
