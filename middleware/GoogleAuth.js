@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
 
 passport.serializeUser(function(user, done) {
   try{
-    done(null,user.google_id)
+    done(null,user.googleID)
   }catch(err){
     done(err)
   }
@@ -36,10 +36,8 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(async function(id, done) {
-
   try{
     const user = await User.get(id)
-    console.log('in deserializer', user)
     done(null,user)
   }catch(err){
     done(err)
