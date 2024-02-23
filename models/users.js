@@ -70,17 +70,17 @@ class User {
     return result.rows;
   }
 
-  /** Given a username, return data about user.
+  /** Given a googleID, return data about user.
    *
-   * Returns { username, first_name, last_name, is_admin, nhlGames}
-   *   where jobs is [ gameID-1, gameID-2, gameID-3 ]
+   * Returns { googleID, first_name, last_name, is_admin, nhlGames}
+   *   where nhlGames is [ gameID-1, gameID-2, gameID-3 ]
    *
    * Throws NotFoundError if user not found.
    **/
 
   static async get(google_id) {
     const userRes = await db.query(
-      `SELECT users. google_id,
+      `SELECT users. google_id AS "googleID",
             users.first_name AS "firstName",
             users.last_name AS "lastName",  
             users.email,
@@ -96,6 +96,8 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${google_id}`);
 
+    
+    if(user.nhlGames[0] === null) user.nhlGames.pop()
     user.nhlGames = user.nhlGames.map( g => g.game_id )
 
     return user;
@@ -103,17 +105,17 @@ class User {
 
   /** Delete given user from database; returns undefined. */
 
-  static async remove(username) {
+  static async remove(googleID) {
     let result = await db.query(
           `DELETE
            FROM users
-           WHERE username = $1
-           RETURNING username`,
-        [username],
+           WHERE google_id = $1
+           RETURNING google_id`,
+        [googleID],
     );
     const user = result.rows[0];
 
-    if (!user) throw new NotFoundError(`No user: ${username}`);
+    if (!user) throw new NotFoundError(`No user: ${user}`);
   }
 
   /**
@@ -125,21 +127,26 @@ class User {
    */
 
   static async track(gameID, googleID, gameType){
+    if(!gameType) throw new BadRequestError('Must include gameType argument')
     let exists = await sportModels[gameType].getGame(gameID)
     
     if(!exists) await sportModels[gameType].addGame({gameID})
 
-    const result = await db.query(
+    try{
+      const result = await db.query(
       `INSERT INTO ${gameType}_users
       (game_id,google_id)
       VALUES
       ($1,$2)
       RETURNING game_id AS "gameID", google_id AS "googleID"`,
       [gameID,googleID]
-    )
-    console.log(result.rows)
-      
-    return `${result.rows[0].googleID} tracking ${result.rows[0].gameID}`
+      )
+
+      return {msg: `${result.rows[0].googleID} tracking ${result.rows[0].gameID}`}
+    }catch(err){
+      throw new NotFoundError(`No user with id: ${googleID}`)
+    }
+    
   }
 
   /**
@@ -151,10 +158,16 @@ class User {
    */
 
   static async untrack(gameID, googleID, gameType){
-    await db.query(`
+    if(!gameType) throw new BadRequestError('Must include gameType argument')
+
+      const {rowCount} = await db.query(`
       DELETE FROM ${gameType}_users
       WHERE google_id = $1 AND game_id = $2
+      RETURNING google_id, game_id
     `, [googleID,gameID])
+
+    if(!rowCount) throw new NotFoundError('User or game id not found')
+
   }
 
 }
