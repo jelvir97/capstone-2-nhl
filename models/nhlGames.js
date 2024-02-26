@@ -1,6 +1,7 @@
 "use strict";
 
 const db = require("../db");
+const {NHL_MODEL_URI} = require('../config')
 const {BigQuery} =  require('@google-cloud/bigquery')
 
 const bigqueryClient = new BigQuery()
@@ -58,7 +59,7 @@ class NHL_Games {
         //TODO
         const query = `
         SELECT *
-        FROM \`nhl-modeling.demo.dummy_game_data\`
+        FROM ${NHL_MODEL_URI}
         WHERE gameId = @gameID`
 
         const options = {
