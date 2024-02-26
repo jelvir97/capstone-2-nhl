@@ -11,6 +11,8 @@ const PORT = +process.env.PORT || 3000;
 
 const COOKIE_KEYS = process.env.COOKIE_KEYS
 
+const NHL_MODEL_URI = process.env.NHL_MODEL_URI
+
 // Use dev database, testing database, or via env var, production database
 function getDatabaseUri() {
   return (process.env.NODE_ENV === "test")
@@ -30,4 +32,5 @@ module.exports = {
   PORT,
   COOKIE_KEYS,
   getDatabaseUri,
+  NHL_MODEL_URI,
 };

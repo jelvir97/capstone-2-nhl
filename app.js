@@ -1,12 +1,21 @@
 require('dotenv').config()
 const express = require('express')
 const passport = require('./middleware/GoogleAuth')
+
 const authRoutes = require('./routes/auth')
+const userRoutes = require('./routes/users')
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const cors = require('cors')
 const {COOKIE_KEYS} = require('./config')
+const isAuthenticated = require('./middleware/isAuthenticated')
+
+const {
+    NotFoundError,
+    BadRequestError,
+    UnauthorizedError,
+  } = require("./expressError");
 
 const app = express()
 
@@ -66,17 +75,33 @@ app.use(
 
 
 app.use('/', authRoutes)
+app.use('/users', userRoutes)
+
+app.get('/secret', isAuthenticated, (req, res, next)=>{
+    return res.end('You found the secret')
+})
 
 app.get('/',(req, res)=>{
-    
-    
-    console.log(req.session)
-    console.log(req.user)
-    req.session.views = (req.session.views || 0) + 1
    
     return req.user ? res.render('home') : res.end('go to login page')
 
     //res.json({msg:"hello world"})
 })
+
+/** Handle 404 errors -- this matches everything */
+app.use(function (req, res, next) {
+    return next(new NotFoundError());
+  });
+  
+  /** Generic error handler; anything unhandled goes here. */
+app.use(function (err, req, res, next) {
+    if (process.env.NODE_ENV !== "test"); //console.error(err.stack)
+    const status = err.status || 500;
+    const message = err.message;
+
+    return res.status(status).json({
+        error: { message, status },
+    });
+});
 
 module.exports = app;
