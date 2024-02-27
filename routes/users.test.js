@@ -25,7 +25,7 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 
-const u1 = { google_id: 'u1',
+const u1 = { googleID: 'u1',
     firstName: 'u1-first',
     lastName:  'u1-last',
     email: 'u1@test.com',
@@ -33,7 +33,7 @@ const u1 = { google_id: 'u1',
     nhlGames: [] 
 } 
 
-const u2 = { google_id: 'u2',
+const u2 = { googleID: 'u2',
     firstName: 'u2-first',
     lastName:  'u2-last',
     email: 'u2@test.com',
@@ -185,6 +185,42 @@ describe('DELETE /users/:id', ()=>{
             next()
         })
         const res = await requests(app).delete('/users/u2')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be logged in', status: 401 } })
+    })
+})
+
+describe('POST /users/:gameType/:gameID', ()=>{
+    test('should work with authenticated user', async()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+
+        const res = await requests(app).post('/users/track/nhl_games/game1')
+        console.log(res.body)
+        expect(res.statusCode).toBe(201)
+        expect(res.body).toEqual({msg: 'u1 tracking game1'})
+    })
+
+    test('should fail with BadRequest', async()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+
+        const res = await requests(app).post('/users/track/notagametype/game1')
+
+        expect(res.statusCode).toBe(400)
+        expect(res.body).toEqual({ error: { message: 'Must include gameType argument', status: 400  } })
+    })
+
+    test('should fail with unauthenticated user', async ()=>{
+
+        MockAuth.mockImplementation((req,res,next)=>{
+            next()
+        })
+        const res = await requests(app).delete('/users/track/nhl_games/game1')
         expect(res.statusCode).toEqual(401)
         expect(res.body).toEqual({ error: { message: 'Must be logged in', status: 401 } })
     })

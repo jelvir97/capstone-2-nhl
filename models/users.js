@@ -25,7 +25,7 @@ class User {
    * Throws BadRequestError on duplicates.
    **/
 
-  static async register({ google_id, firstName, lastName, email, isAdmin=false }) {
+  static async register({ googleID, firstName, lastName, email, isAdmin=false }) {
     const result = await db.query(
           `INSERT INTO users
            (google_id,
@@ -36,7 +36,7 @@ class User {
            VALUES ($1, $2, $3, $4, $5)
            RETURNING google_id AS "googleID", first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
         [
-          google_id,
+          googleID,
           firstName,
           lastName,
           email,
@@ -127,7 +127,7 @@ class User {
    */
 
   static async track(gameID, googleID, gameType){
-    if(!gameType) throw new BadRequestError('Must include gameType argument')
+    if(!sportModels[gameType]) throw new BadRequestError('Must include gameType argument')
     let exists = await sportModels[gameType].getGame(gameID)
     
     if(!exists) await sportModels[gameType].addGame(gameID)

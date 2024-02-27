@@ -86,9 +86,11 @@ router.delete('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
  * returns {msg: "googleID tracking gameID"}
  */
 
-router.post('/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
+router.post('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
+        console.log('inroute',req.session)
         const msg = await User.track(req.params.gameID, req.session.user.googleID, req.params.gameType)
+        res.status(201)
         return res.json(msg)
     }catch(err){
         next(err)
@@ -104,7 +106,7 @@ router.post('/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
  * returns undefined
  */
 
-router.delete('/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
+router.delete('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
         await User.untrack(req.params.gameID,req.session.user.googleID, req.params.gameType)
         res.end()

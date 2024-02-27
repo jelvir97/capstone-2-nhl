@@ -12,14 +12,14 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM nhl_games_users");
 
   await User.register(
-            { google_id: 'u1',
+            { googleID: 'u1',
               firstName: 'u1-first',
               lastName:  'u1-last',
               email: 'u1@test.com',
               isAdmin: true })
   
   await User.register(
-            { google_id: 'u2',
+            { googleID: 'u2',
               firstName: 'u2-first',
               lastName:  'u2-last',
               email: 'u2@test.com',
