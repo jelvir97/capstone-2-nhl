@@ -55,21 +55,27 @@ class NHL_Games {
      * Gets predictions from BigQuery model
      */
 
-    static async getPrediction (gameID){
+    static async getPrediction (...gameIDs){
         //TODO
         const query = `
-        SELECT *
+        SELECT gameId AS gameID, moneyHome, moneyAway, model_prb_money_home, model_prb_money_away
         FROM ${NHL_MODEL_URI}
-        WHERE gameId = @gameID`
+        WHERE gameId IN UNNEST(@gameID)
+        ORDER BY gameId`
 
         const options = {
             query: query,
             location: 'US',
-            params:{gameID: gameID}
+            params:{gameID: gameIDs}
         }
 
         const [rows] = await bigqueryClient.query(options);
-        return rows[0];
+
+        const predictions = {}
+        for(let row of rows){
+            predictions[row.gameID] = row;
+        }
+        return predictions;
     }
 
 }
