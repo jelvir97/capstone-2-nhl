@@ -19,11 +19,11 @@ async function commonBeforeAll() {
               isAdmin: true })
   
   await User.register(
-            { google_id: 'u1',
-              firstName: 'u1-first',
-              lastName:  'u1-last',
-              email: 'u1@test.com',
-              isAdmin: true })
+            { google_id: 'u2',
+              firstName: 'u2-first',
+              lastName:  'u2-last',
+              email: 'u2@test.com',
+              isAdmin: false })
 
   await NHL_Games.addGame('game1')
 

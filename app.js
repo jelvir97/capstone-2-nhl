@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+
 const passport = require('./middleware/GoogleAuth')
 
 const authRoutes = require('./routes/auth')
@@ -9,6 +10,8 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const cors = require('cors')
 const {COOKIE_KEYS} = require('./config')
+
+const MockAuth = require('./middleware/MockAuth')
 const isAuthenticated = require('./middleware/isAuthenticated')
 
 const {
@@ -16,6 +19,7 @@ const {
     BadRequestError,
     UnauthorizedError,
   } = require("./expressError");
+
 
 const app = express()
 
@@ -26,17 +30,6 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
-// app.use(
-//     cookieSession({
-//       name: "session",
-//       keys: COOKIE_KEYS,
-//       maxAge: 24 * 60 * 60 * 100,
-//       cookie: {
-//         secure: true,
-//         sameSite: 'none'
-//       }
-//     })
-// );
 
 // initalize passport
 app.use(passport.initialize());
@@ -44,24 +37,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cookieParser());
-
-// register regenerate & save after the cookieSession middleware initialization
-// app.use(function(request, response, next) {
-//     console.log(request.session)
-//     if (request.session && !request.session.regenerate) {
-//         request.session.regenerate = (cb) => {
-//             cb()
-//         }
-//     }
-//     if (request.session && !request.session.save) {
-//         request.session.save = (cb) => {
-
-//             console.log(cb)
-//             cb()
-//         }
-//     }
-//     return next()
-// })
 
 //allows requests from react client
 app.use(
@@ -72,7 +47,7 @@ app.use(
     })
   );
 
-
+if(process.env.NODE_ENV === 'test') app.use(MockAuth)
 
 app.use('/', authRoutes)
 app.use('/users', userRoutes)
