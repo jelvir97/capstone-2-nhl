@@ -5,11 +5,13 @@ const passport = require('./middleware/GoogleAuth')
 
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/users')
+const nhlRoutes = require('./routes/nhlGames')
+
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const cors = require('cors')
-const {COOKIE_KEYS} = require('./config')
+
 
 const MockAuth = require('./middleware/MockAuth')
 const isAuthenticated = require('./middleware/isAuthenticated')
@@ -22,6 +24,8 @@ const {
 
 
 const app = express()
+
+app.use(express.json())
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -51,6 +55,7 @@ if(process.env.NODE_ENV === 'test') app.use(MockAuth)
 
 app.use('/', authRoutes)
 app.use('/users', userRoutes)
+app.use('/nhl', nhlRoutes)
 
 app.get('/secret', isAuthenticated, (req, res, next)=>{
     return res.end('You found the secret')
