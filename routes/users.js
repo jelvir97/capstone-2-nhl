@@ -29,7 +29,6 @@ const isAdmin =  require('../middleware/isAdmin')
 
 router.get('/', isAuthenticated, isAdmin, async (req,res,next)=>{
     try{
-        console.log(req.session)
         const users = await User.findAll()
         return res.json(users)
     }catch(err){
@@ -88,7 +87,6 @@ router.delete('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
 
 router.post('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
-        console.log('inroute',req.session)
         const msg = await User.track(req.params.gameID, req.session.user.googleID, req.params.gameType)
         res.status(201)
         return res.json(msg)
@@ -108,6 +106,8 @@ router.post('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
 
 router.delete('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
+        console.log('in route',req.session.user.googleID)
+        console.log('in route',req.params.gameID)
         await User.untrack(req.params.gameID,req.session.user.googleID, req.params.gameType)
         res.end()
     }catch(err){

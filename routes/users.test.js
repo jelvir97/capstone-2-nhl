@@ -198,7 +198,6 @@ describe('POST /users/:gameType/:gameID', ()=>{
         })
 
         const res = await requests(app).post('/users/track/nhl_games/game1')
-        console.log(res.body)
         expect(res.statusCode).toBe(201)
         expect(res.body).toEqual({msg: 'u1 tracking game1'})
     })
@@ -213,6 +212,35 @@ describe('POST /users/:gameType/:gameID', ()=>{
 
         expect(res.statusCode).toBe(400)
         expect(res.body).toEqual({ error: { message: 'Must include gameType argument', status: 400  } })
+    })
+
+    test('should fail with unauthenticated user', async ()=>{
+
+        MockAuth.mockImplementation((req,res,next)=>{
+            next()
+        })
+        const res = await requests(app).post('/users/track/nhl_games/game1')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be logged in', status: 401 } })
+    })
+})
+
+
+describe('DELETE /users/track/:gameType/:gameID', ()=>{
+
+    test('should work with authenticated user', async()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+        await requests(app).post('/users/track/nhl_games/game1')
+
+        const res = await requests(app).delete('/users/track/nhl_games/game1')
+        expect(res.statusCode).toBe(200)
+
+        const {body} = await requests(app).get('/users/u1')
+    
+        expect(body.nhlGames).toEqual([])
     })
 
     test('should fail with unauthenticated user', async ()=>{
