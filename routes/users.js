@@ -46,9 +46,11 @@ router.get('/', isAuthenticated, isAdmin, async (req,res,next)=>{
  *                  lastName,
  *                  email, 
  *                  nhlGames: []}
+ * 
+ *  Required Auth: admin
  */
 
-router.get('/:id', async(req,res,next)=>{
+router.get('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
     try{
         const user = await User.get(req.params.id)
         return res.json(user)

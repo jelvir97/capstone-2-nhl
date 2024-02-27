@@ -54,17 +54,15 @@ describe('GET /users', ()=>{
         const res = await requests(app)
                         .get('/users')
 
-        console.log(res)
-
         expect(res.statusCode).toBe(200)
         expect(res.body).toEqual([
-            { google_id: 'u1',
+            { googleID: 'u1',
                 firstName: 'u1-first',
                 lastName:  'u1-last',
                 email: 'u1@test.com',
                 isAdmin: true,  
             },
-            { google_id: 'u2',
+            { googleID: 'u2',
                 firstName: 'u2-first',
                 lastName:  'u2-last',
                 email: 'u2@test.com',
@@ -95,4 +93,63 @@ describe('GET /users', ()=>{
     })
 
 
+})
+
+describe('GET /users/id', ()=>{
+    
+    test('should work with admin user', async ()=>{
+
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+        const res = await requests(app)
+                        .get('/users/u1')
+
+        console.log(res)
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body).toEqual(
+            { googleID: 'u1',
+                firstName: 'u1-first',
+                lastName:  'u1-last',
+                email: 'u1@test.com',
+                isAdmin: true,
+                nhlGames:[]  
+            }
+        )
+    })
+
+    test('should fail with non-admin user', async ()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u2;
+            next()
+        })
+
+        const res = await requests(app).get('/users/u1')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be admin', status: 401 } })
+    })
+
+    test('should fail with unauthenticated user', async ()=>{
+
+        MockAuth.mockImplementation((req,res,next)=>{
+            next()
+        })
+        const res = await requests(app).get('/users/u1')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be logged in', status: 401 } })
+    })
+
+    test('fails 404 not found', async()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+        const res = await requests(app)
+                        .get('/users/u3')
+
+
+        expect(res.statusCode).toBe(404)
+    })
 })

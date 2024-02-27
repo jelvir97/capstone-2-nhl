@@ -34,7 +34,7 @@ class User {
             email,
             is_admin)
            VALUES ($1, $2, $3, $4, $5)
-           RETURNING google_id, first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
+           RETURNING google_id AS "googleID", first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
         [
           google_id,
           firstName,
@@ -58,7 +58,7 @@ class User {
 
   static async findAll() {
     const result = await db.query(
-          `SELECT google_id,
+          `SELECT google_id as "googleID",
                   first_name AS "firstName",
                   last_name AS "lastName",
                   email,
@@ -78,7 +78,7 @@ class User {
    * Throws NotFoundError if user not found.
    **/
 
-  static async get(google_id) {
+  static async get(googleID) {
     const userRes = await db.query(
       `SELECT users. google_id AS "googleID",
             users.first_name AS "firstName",
@@ -89,12 +89,12 @@ class User {
       LEFT JOIN nhl_games ON (games.game_id = nhl_games.game_id) 
       WHERE users.google_id = $1
       GROUP BY users.google_id;`,
-        [google_id],
+        [googleID],
     );
 
     const user = userRes.rows[0];
 
-    if (!user) throw new NotFoundError(`No user: ${google_id}`);
+    if (!user) throw new NotFoundError(`No user: ${googleID}`);
 
     
     if(user.nhlGames[0] === null) user.nhlGames.pop()
