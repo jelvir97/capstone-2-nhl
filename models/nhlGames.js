@@ -2,9 +2,7 @@
 
 const db = require("../db");
 const {NHL_MODEL_URI} = require('../config')
-const {BigQuery} =  require('@google-cloud/bigquery')
-
-const bigqueryClient = new BigQuery()
+const bigqueryClient = require('../middleware/BigQueryClient')
 
 const {
   NotFoundError,
@@ -70,6 +68,7 @@ class NHL_Games {
         }
 
         const [rows] = await bigqueryClient.query(options);
+        
 
         const predictions = {}
         for(let row of rows){
