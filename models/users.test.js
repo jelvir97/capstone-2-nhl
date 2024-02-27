@@ -27,7 +27,7 @@ afterAll(commonAfterAll);
 
 describe("register", function () {
   const newUser = {
-    google_id: "new",
+    googleID: "new",
     firstName: "Test",
     lastName: "Tester",
     email: "test@test.com",
@@ -62,14 +62,14 @@ describe("findAll", function () {
     const users = await User.findAll();
     expect(users).toEqual([
       {
-        google_id: "u1",
+        googleID: "u1",
         firstName: "U1F",
         lastName: "U1L",
         email: "u1@email.com",
         isAdmin: false,
       },
       {
-        google_id: "u2",
+        googleID: "u2",
         firstName: "U2F",
         lastName: "U2L",
         email: "u2@email.com",
