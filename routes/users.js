@@ -68,7 +68,7 @@ router.get('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
  *  returns: undefined
  */
 
-router.post('/:id', async(req,res,next)=>{
+router.delete('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
     try{
         await User.remove(req.params.id)
         return res.end()
@@ -86,7 +86,7 @@ router.post('/:id', async(req,res,next)=>{
  * returns {msg: "googleID tracking gameID"}
  */
 
-router.post('/:gameType/:gameID', async (req,res,next)=>{
+router.post('/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
         const msg = await User.track(req.params.gameID, req.session.user.googleID, req.params.gameType)
         return res.json(msg)
@@ -104,7 +104,7 @@ router.post('/:gameType/:gameID', async (req,res,next)=>{
  * returns undefined
  */
 
-router.delete('/:gameType/:gameID', async (req,res,next)=>{
+router.delete('/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
         await User.untrack(req.params.gameID,req.session.user.googleID, req.params.gameType)
         res.end()

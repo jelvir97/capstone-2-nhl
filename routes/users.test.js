@@ -106,7 +106,6 @@ describe('GET /users/id', ()=>{
         const res = await requests(app)
                         .get('/users/u1')
 
-        console.log(res)
 
         expect(res.statusCode).toBe(200)
         expect(res.body).toEqual(
@@ -151,5 +150,42 @@ describe('GET /users/id', ()=>{
 
 
         expect(res.statusCode).toBe(404)
+    })
+})
+
+describe('DELETE /users/:id', ()=>{
+
+    test('should work for admin', async()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u1;
+            next()
+        })
+
+        await requests(app).delete('/users/u2')
+        
+        const res = await requests(app).get('/users/u2')
+
+        expect(res.statusCode).toBe(404)
+    })
+
+    test('should fail with non-admin user', async ()=>{
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.user = u2;
+            next()
+        })
+
+        const res = await requests(app).delete('/users/u2')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be admin', status: 401 } })
+    })
+
+    test('should fail with unauthenticated user', async ()=>{
+
+        MockAuth.mockImplementation((req,res,next)=>{
+            next()
+        })
+        const res = await requests(app).delete('/users/u2')
+        expect(res.statusCode).toEqual(401)
+        expect(res.body).toEqual({ error: { message: 'Must be logged in', status: 401 } })
     })
 })
