@@ -6,6 +6,7 @@ const passport = require('./middleware/GoogleAuth')
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/users')
 const nhlRoutes = require('./routes/nhlGames')
+const NHL_API_Routes = require('./routes/NHL_API')
 
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
@@ -56,6 +57,7 @@ if(process.env.NODE_ENV === 'test') app.use(MockAuth)
 app.use('/', authRoutes)
 app.use('/users', userRoutes)
 app.use('/nhl', nhlRoutes)
+app.use('/nhl-api', NHL_API_Routes)
 
 app.get('/secret', isAuthenticated, (req, res, next)=>{
     return res.end('You found the secret')
