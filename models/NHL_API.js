@@ -3,9 +3,7 @@
 const axios = require('axios')
 
 const {
-    NotFoundError,
     BadRequestError,
-    UnauthorizedError,
   } = require("../expressError");
 
 /**
@@ -71,7 +69,7 @@ class NHL_API {
     /**
      * Gets player stats for team
      * 
-     * Must pass in team abreviation
+     * Must pass in team abbreviation
      */
     static async getTeamStats(team){
         if(!team) throw new BadRequestError('Must have team abbreviation')
@@ -81,9 +79,9 @@ class NHL_API {
     }
 
     /**
-     * Gets current team roster
+     * Gets current team schedule
      * 
-     * Must pass in team abreviation
+     * Must pass in team abbreviation
      */
     static async getTeamSchedule(team, date='now'){
         if(!team) throw new BadRequestError('Must have team abbreviation')
@@ -94,7 +92,7 @@ class NHL_API {
     /**
      * Gets current team roster
      * 
-     * Must pass in team abreviation
+     * Must pass in team abbreviation
      */
     static async getTeamRoster(team){
         if(!team) throw new BadRequestError('Must have team abbreviation')
