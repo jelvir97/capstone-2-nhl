@@ -12,6 +12,7 @@
   "dependencies": {
     "@google-cloud/bigquery": "^7.4.0",
     "@google-cloud/storage": "^7.6.0",
+    "axios": "^1.6.7",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
