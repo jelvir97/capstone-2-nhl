@@ -56,7 +56,10 @@ class NHL_Games {
     static async getPrediction (...gameIDs){
         //TODO
         const query = `
-        SELECT gameId AS gameID, moneyHome, moneyAway, model_prb_money_home, model_prb_money_away
+        SELECT gameId AS gameID, homeProbMoney, awayProbMoney, 
+                homeOddsMoney, awayOddsMoney, homeProbModelMoney,
+                awayProbModelMoney, homeOddsModelMoney, awayOddsModelMoney,
+                expectedRoiHomeMoney, expectedRoiAwayMoney
         FROM ${NHL_MODEL_URI}
         WHERE gameId IN UNNEST(@gameID)
         ORDER BY gameId`
@@ -66,7 +69,7 @@ class NHL_Games {
             location: 'US',
             params:{gameID: gameIDs}
         }
-
+        console.log('nhl bg model',gameIDs)
         const [rows] = await bigqueryClient.query(options);
         
 

@@ -37,7 +37,7 @@ class NHL_API {
      */
     static async getTeamsList(){
         const {data} = await axios.get(`https://api.nhle.com/stats/rest/en/team`)
-        return data
+        return data.data.slice(27)
     }
 
     /**
