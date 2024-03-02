@@ -24,10 +24,11 @@ describe('getSchedule', ()=>{
 })
 
 describe('getTeamsList', ()=>{
-    axios.get.mockImplementation((url)=> ({data: url}))
+    
     test('works: calls axios.get()', async()=>{
+        axios.get.mockImplementation((url)=> ({data: {data: url}}))
         const res = await NHL_API.getTeamsList()
-        expect(res).toEqual('https://api.nhle.com/stats/rest/en/team')
+        expect(res).toEqual('rest/en/team')
     })
 })
 
@@ -125,4 +126,13 @@ describe('getPlayByPlay', ()=>{
         }
         
     })
+})
+
+describe('getSpotlight', ()=>{
+    test('works', async ()=>{
+        axios.get.mockImplementation((url)=> ({data: url}))
+        const res = await NHL_API.getSpotlight('gameID')
+        expect(res).toEqual('https://api-web.nhle.com/v1/player-spotlight')
+    })
+
 })

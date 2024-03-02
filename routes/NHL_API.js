@@ -116,5 +116,18 @@ router.get('/:gameID/play-by-play', async ( req, res, next)=>{
     }
 })
 
+/**
+ *  GET /nhl-api/spotlight
+ * 
+ */
+router.get('/spotlight', async ( req, res, next)=>{
+    try{
+        const spotlight = await NHL_API.getSpotlight()
+        res.json(spotlight)
+    }catch(err){
+        next(err)
+    }
+})
+
 
 module.exports = router;

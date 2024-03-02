@@ -111,6 +111,16 @@ class NHL_API {
         return data;
     }
 
+    /**
+     *  Gets spotlight players;
+     *  
+     * 
+     */
+    static async getSpotlight(gameID){
+        const {data} = await axios.get(`https://api-web.nhle.com/v1/player-spotlight`)
+        return data;
+    }
+
 }
 
 module.exports = NHL_API;
