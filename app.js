@@ -28,12 +28,10 @@ const app = express()
 
 app.use(express.json())
 
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'ejs');
 app.use(session({
     secret: 'cookie_secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 }));
 
 // initalize passport
@@ -59,16 +57,6 @@ app.use('/users', userRoutes)
 app.use('/nhl', nhlRoutes)
 app.use('/nhl-api', NHL_API_Routes)
 
-app.get('/secret', isAuthenticated, (req, res, next)=>{
-    return res.end('You found the secret')
-})
-
-app.get('/',(req, res)=>{
-   
-    return req.user ? res.render('home') : res.end('go to login page')
-
-    //res.json({msg:"hello world"})
-})
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

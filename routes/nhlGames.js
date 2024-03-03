@@ -36,10 +36,8 @@ router.post('/predictions',  async(req, res, next)=>{
         const gameIDs =  req.body.gameIDs
         if(!gameIDs) throw new BadRequestError('No gameIDs in request body')
         const predictions = await NHL_Games.getPrediction(...gameIDs)
-        console.log('route hit', predictions)
         res.json(predictions)
     }catch(err){
-        console.log(err)
         next(err)
     }
 })

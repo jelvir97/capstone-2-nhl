@@ -69,7 +69,6 @@ class NHL_Games {
             location: 'US',
             params:{gameID: gameIDs}
         }
-        console.log('nhl bg model',gameIDs)
         const [rows] = await bigqueryClient.query(options);
         
 
