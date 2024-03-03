@@ -87,7 +87,7 @@ router.delete('/:id', isAuthenticated, isAdmin, async(req,res,next)=>{
 
 router.post('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
-        const msg = await User.track(req.params.gameID, req.session.user.googleID, req.params.gameType)
+        const msg = await User.track(req.params.gameID, req.user.googleID, req.params.gameType)
         res.status(201)
         return res.json(msg)
     }catch(err){
@@ -106,9 +106,7 @@ router.post('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
 
 router.delete('/track/:gameType/:gameID', isAuthenticated, async (req,res,next)=>{
     try{
-        console.log('in route',req.session.user.googleID)
-        console.log('in route',req.params.gameID)
-        await User.untrack(req.params.gameID,req.session.user.googleID, req.params.gameType)
+        await User.untrack(req.params.gameID,req.user.googleID, req.params.gameType)
         res.end()
     }catch(err){
         next(err)

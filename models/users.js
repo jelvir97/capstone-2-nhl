@@ -144,6 +144,7 @@ class User {
 
       return {msg: `${result.rows[0].googleID} tracking ${result.rows[0].gameID}`}
     }catch(err){
+      console.log(err)
       throw new NotFoundError(`No user with id: ${googleID}`)
     }
     

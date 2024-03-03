@@ -1,7 +1,8 @@
 const { UnauthorizedError } = require("../expressError");
 
 function isAuthenticated (req, res, next) {
-    if (!req.session.user) throw new UnauthorizedError('Must be logged in')
+  console.log(req)
+    if (!req.session.passport.user) throw new UnauthorizedError('Must be logged in')
     else next()
   }
 
