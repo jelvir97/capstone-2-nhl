@@ -9,7 +9,7 @@ const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL;
  * Redirects to React App after authentication
  */
 router.get("/redirect/client", (req,res)=>{
-    console.log('rdirect to client', req.session)
+    console.log('rdirect to client', req.user)
     res.redirect(CLIENT_HOME_PAGE_URL)
 })
 
