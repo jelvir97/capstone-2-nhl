@@ -33,6 +33,7 @@ passport.use(new GoogleStrategy({
  *  Gets google id from request.
  */
 passport.serializeUser(function(user, done) {
+  console.log('in serialize',user)
   try{
     done(null,user.googleID)
   }catch(err){
