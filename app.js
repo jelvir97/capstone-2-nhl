@@ -12,23 +12,49 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const cors = require('cors')
 
+const RS = require('connect-redis').default;
+
 
 const MockAuth = require('./middleware/MockAuth')
-const isAuthenticated = require('./middleware/isAuthenticated')
 
 const {
     NotFoundError,
-  } = require("./expressError");
+} = require("./expressError");
 
 
 const app = express()
 
 app.use(express.json())
 
+app.set('trust proxy', 1);
+
+//Redis setup
+const redisClient = require('./middleware/redisClient')
+redisClient.connect().catch(console.error)
+
+const RedisStore = new RS({
+  client: redisClient,
+})
+
+//Logs Redis Connection
+redisClient.on('error', function (err) {
+  console.log('Could not establish a connection with redis. ' + err);
+});
+redisClient.on('connect', function (err) {
+  console.log('Connected to redis successfully');
+});
+
+// configs app to use express-session with RedisStore
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
+  store: RedisStore,
+  secret: 'secret$%^134',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+      secure: false, // if true only transmit cookie over https
+      httpOnly: false, // if true prevent client side JS from reading the cookie 
+      maxAge: 1000 * 60 * 10 // session max age in miliseconds
+  }
 }));
 
 app.use(cookieParser());
