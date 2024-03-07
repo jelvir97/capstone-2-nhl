@@ -10,6 +10,7 @@ const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL;
  */
 router.get("/redirect/client", (req,res)=>{
     console.log('rdirect to client', req.user)
+    res.session.user = req.user
     res.redirect(CLIENT_HOME_PAGE_URL)
 })
 
