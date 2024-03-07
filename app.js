@@ -29,7 +29,7 @@ app.use(session({
     secret: 'cookie_secret',
     resave: false,
     saveUninitialized: false,
-    name:'juicycookie'
+    cookie: {secure: true}
 }));
 
 // initalize passport
