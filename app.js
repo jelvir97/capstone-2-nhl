@@ -8,7 +8,6 @@ const userRoutes = require('./routes/users')
 const nhlRoutes = require('./routes/nhlGames')
 const NHL_API_Routes = require('./routes/NHL_API')
 
-const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const cors = require('cors')
@@ -19,8 +18,6 @@ const isAuthenticated = require('./middleware/isAuthenticated')
 
 const {
     NotFoundError,
-    BadRequestError,
-    UnauthorizedError,
   } = require("./expressError");
 
 

@@ -5,11 +5,16 @@ const router = express.Router()
 
 const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL;
 
-
+/**
+ * Redirects to React App after authentication
+ */
 router.get("/redirect/client", (req,res)=>{
     res.redirect(CLIENT_HOME_PAGE_URL)
 })
 
+/**
+ * Routes to access google users api.
+ */
 router.get('/login/federated/google',
   passport.authenticate('google', { scope: ['profile', 'email'], prompt:'select_account' }));
 
@@ -18,6 +23,12 @@ router.get('/oauth2/redirect/google', passport.authenticate('google', {
     failureRedirect: '/'
 }));
 
+
+/**
+ * Logs out user.
+ * 
+ * Removes user from session.
+ */
 router.post('/logout', function(req, res, next) {
   try{
     console.log(req.session)
@@ -34,6 +45,9 @@ router.post('/logout', function(req, res, next) {
 
 });
 
+/**
+ * Endpoint for React app to get user info after authentication.
+ */
 router.get('/login/success', (req, res, next)=>{
   console.log(req.session)
   if (req.user) {
