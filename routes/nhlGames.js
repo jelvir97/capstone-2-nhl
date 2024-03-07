@@ -30,7 +30,7 @@ const isAdmin =  require('../middleware/isAdmin')
  *                                      }, ...
  *                           }
  */
-router.post('/predictions',  async(req, res, next)=>{
+router.post('/predictions', isAuthenticated, async(req, res, next)=>{
     try{
         
         const gameIDs =  req.body.gameIDs
