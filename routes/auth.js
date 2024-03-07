@@ -20,7 +20,7 @@ router.get('/login/federated/google',
   passport.authenticate('google', { scope: ['profile', 'email'], prompt:'select_account' }));
 
 router.get('/oauth2/redirect/google', passport.authenticate('google', {
-    successRedirect: "/redirect/client",
+    successRedirect: CLIENT_HOME_PAGE_URL,
     failureRedirect: '/'
 }));
 
