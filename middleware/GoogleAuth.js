@@ -2,6 +2,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require('passport')
 const User = require('../models/users')
 
+// Google Strategy Config
 passport.use(new GoogleStrategy({
     clientID: process.env['GOOGLE_CLIENT_ID'],
     clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
@@ -24,6 +25,11 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+/**
+ *  Serializer
+ * 
+ *  Gets google id from request.
+ */
 passport.serializeUser(function(user, done) {
   try{
     done(null,user.googleID)
@@ -33,6 +39,12 @@ passport.serializeUser(function(user, done) {
   
 });
 
+/**
+ *  Deserializer
+ * 
+ *  Finds user in db.
+ *  Puts User object onto session.
+ */
 passport.deserializeUser(async function(id, done) {
   try{
     const user = await User.get(id)
