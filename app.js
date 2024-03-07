@@ -29,6 +29,10 @@ app.use(session({
     secret: 'cookie_secret',
     resave: false,
     saveUninitialized: true,
+    cookie:{
+      secure: true,
+      sameSite:'none'
+    }
 }));
 
 app.use(cookieParser());
