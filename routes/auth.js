@@ -9,7 +9,7 @@ const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL;
  * Redirects to React App after authentication
  */
 router.get("/redirect/client", (req,res)=>{
-    console.log('rdirect to client', res.session)
+    console.log('rdirect to client', req.session)
     res.redirect(CLIENT_HOME_PAGE_URL)
 })
 
@@ -20,7 +20,7 @@ router.get('/login/federated/google',
   passport.authenticate('google', { scope: ['profile', 'email'], prompt:'select_account' }));
 
 router.get('/oauth2/redirect/google', passport.authenticate('google', {
-    successRedirect: CLIENT_HOME_PAGE_URL,
+    successRedirect: "/redirect/client",
     failureRedirect: '/'
 }));
 
