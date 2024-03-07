@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(session({
     secret: 'cookie_secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     name:'juicycookie'
 }));
 
