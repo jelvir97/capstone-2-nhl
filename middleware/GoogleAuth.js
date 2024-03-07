@@ -10,8 +10,7 @@ passport.use(new GoogleStrategy({
   },
 
   async function(request, accessToken, refreshToken, profile, done){
-    console.log('refresh',refreshToken)
-    console.log('access',accessToken)
+    console.log('profile', profile)
     try{
       const user  =  await User.get(profile.id)
       console.log('user found', user.firstName)
