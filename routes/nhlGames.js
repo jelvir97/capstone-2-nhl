@@ -18,7 +18,7 @@ const isAdmin =  require('../middleware/isAdmin')
 */
 
 /**
- *  POST /nhl/:id
+ *  POST /nhl/predictions
  * 
  *  using POST to pass in multiple game id's in request body
  * 
