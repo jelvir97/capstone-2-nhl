@@ -49,7 +49,7 @@ router.post('/logout', function(req, res, next) {
  * Endpoint for React app to get user info after authentication.
  */
 router.get('/login/success', (req, res, next)=>{
-  console.log('/login/success',req.user)
+  console.log('/login/success',req.session.user)
   if (req.user) {
     res.json({
      message : "User Authenticated",
