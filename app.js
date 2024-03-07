@@ -32,12 +32,14 @@ app.use(session({
     cookie: {secure: true}
 }));
 
+app.use(cookieParser());
+
 // initalize passport
 app.use(passport.initialize());
 // deserialize cookie from the browser
 app.use(passport.session());
 
-app.use(cookieParser());
+
 
 
 //allows requests from react client
