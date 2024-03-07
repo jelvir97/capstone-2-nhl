@@ -28,7 +28,8 @@ app.use(express.json())
 app.use(session({
     secret: 'cookie_secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true,
+    name:'juicycookie'
 }));
 
 // initalize passport
