@@ -16,7 +16,7 @@ passport.use(new GoogleStrategy({
       console.log('user found', user.firstName)
       done(null, user)
     }catch(err){
-      const user = await User.register({google_id:profile.id, 
+      const user = await User.register({googleID:profile.id, 
                                         firstName:profile.name.givenName, 
                                         lastName:profile.name.familyName, 
                                         email:profile.emails[0].value})
