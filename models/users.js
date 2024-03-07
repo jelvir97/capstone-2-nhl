@@ -26,6 +26,7 @@ class User {
    **/
 
   static async register({ googleID, firstName, lastName, email, isAdmin=false }) {
+    console.log(googleID)
     const result = await db.query(
           `INSERT INTO users
            (google_id,
