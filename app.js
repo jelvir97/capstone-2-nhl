@@ -44,6 +44,7 @@ redisClient.on('connect', function (err) {
   console.log('Connected to redis successfully');
 });
 
+app.use(cookieParser());
 // configs app to use express-session with RedisStore
 app.use(session({
   store: RedisStore,
@@ -57,7 +58,7 @@ app.use(session({
   }
 }));
 
-app.use(cookieParser());
+
 
 // initalize passport
 app.use(passport.initialize());
