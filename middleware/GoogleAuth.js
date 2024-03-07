@@ -50,8 +50,9 @@ passport.serializeUser(function(user, done) {
  */
 passport.deserializeUser(async function(id, done) {
   try{
+    console.log(id)
     const user = await User.get(id)
-    console.log('in deserielizer: ',user)
+    console.log('in deserializer: ',user)
     done(null,user)
   }catch(err){
     done(err)

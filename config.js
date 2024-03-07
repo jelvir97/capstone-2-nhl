@@ -13,7 +13,9 @@ const COOKIE_KEYS = process.env.COOKIE_KEYS
 
 const NHL_MODEL_URI = process.env.NHL_MODEL_URI
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3001'
+
+console.log(BASE_URL)
 
 // Use dev database, testing database, or via env var, production database
 function getDatabaseUri() {

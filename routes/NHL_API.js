@@ -65,10 +65,12 @@ router.get('/standings', async (req, res, next)=>{
 
 router.get('/:team/schedule', async(req, res, next)=>{
     try{
+        
         const schedule = await NHL_API.getTeamSchedule(req.params.team, 
                                                     req.query.date ? req.query.date : 'now')
         res.json(schedule)
     }catch(err){
+        console.log(err)
         next(err)
     }
 })
