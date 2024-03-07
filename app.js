@@ -39,10 +39,11 @@ app.use(passport.session());
 
 app.use(cookieParser());
 
+
 //allows requests from react client
 app.use(
     cors({
-      origin: "http://localhost:3000", // allow to server to accept request from different origin
+      origin: process.env.CLIENT_HOME_PAGE_URL, // allow to server to accept request from different origin
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true // allow session cookie from browser to pass through
     })
