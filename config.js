@@ -13,6 +13,8 @@ const COOKIE_KEYS = process.env.COOKIE_KEYS
 
 const NHL_MODEL_URI = process.env.NHL_MODEL_URI
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
+
 // Use dev database, testing database, or via env var, production database
 function getDatabaseUri() {
   return (process.env.NODE_ENV === "test")
@@ -33,4 +35,5 @@ module.exports = {
   COOKIE_KEYS,
   getDatabaseUri,
   NHL_MODEL_URI,
+  BASE_URL
 };
