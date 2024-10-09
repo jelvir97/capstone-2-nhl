@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-
+console.log(process.env.NODE_ENV)
 const passport = require('./middleware/GoogleAuth')
 
 const authRoutes = require('./routes/auth')
@@ -45,18 +45,21 @@ redisClient.on('connect', function (err) {
 });
 
 app.use(cookieParser());
+
+const productionCookieSettings = {
+  secure: true, // if true only transmit cookie over https
+  httpOnly: false, // if true prevent client side JS from reading the cookie 
+  maxAge: 1000 * 60 * 10, // session max age in miliseconds
+  sameSite: 'none'
+}
+
 // configs app to use express-session with RedisStore
 app.use(session({
   store: RedisStore,
   secret: 'secret$%^134',
   resave: false,
   saveUninitialized: false,
-  cookie: {
-      secure: true, // if true only transmit cookie over https
-      httpOnly: false, // if true prevent client side JS from reading the cookie 
-      maxAge: 1000 * 60 * 10, // session max age in miliseconds
-      sameSite: 'none'
-  }
+  cookie: process.env.NODE_ENV === "dev" ?  { maxAge: 1000 * 60 * 10} : productionCookieSettings
 }));
 
 
@@ -65,8 +68,6 @@ app.use(session({
 app.use(passport.initialize());
 // deserialize cookie from the browser
 app.use(passport.session());
-
-
 
 
 //allows requests from react client

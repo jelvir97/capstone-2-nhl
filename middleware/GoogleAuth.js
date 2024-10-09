@@ -11,7 +11,7 @@ passport.use(new GoogleStrategy({
   },
 
   async function(request, accessToken, refreshToken, profile, done){
-    console.log('profile', profile)
+    //console.log('profile', profile)
     try{
       const user  =  await User.get(profile.id)
       console.log('user found', user.firstName)
@@ -33,7 +33,7 @@ passport.use(new GoogleStrategy({
  *  Gets google id from request.
  */
 passport.serializeUser(function(user, done) {
-  console.log('in serialize',user)
+  //console.log('in serialize',user.googleID)
   try{
     done(null,user.googleID)
   }catch(err){
@@ -50,9 +50,8 @@ passport.serializeUser(function(user, done) {
  */
 passport.deserializeUser(async function(id, done) {
   try{
-    console.log(id)
     const user = await User.get(id)
-    console.log('in deserializer: ',user)
+    //console.log('in deserializer: ',user)
     done(null,user)
   }catch(err){
     done(err)

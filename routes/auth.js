@@ -9,7 +9,6 @@ const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL;
  * Redirects to React App after authentication
  */
 router.get("/redirect/client", (req,res)=>{
-    console.log('rdirect to client', req.user)
     res.redirect(CLIENT_HOME_PAGE_URL)
 })
 
@@ -32,7 +31,7 @@ router.get('/oauth2/redirect/google', passport.authenticate('google', {
  */
 router.post('/logout', function(req, res, next) {
   try{
-    console.log(req.session)
+    //console.log(req.session)
       req.logout((err)=>{
         if(err) return next(err)
         return res.json({msg: "User Logged Out"})  
@@ -50,7 +49,7 @@ router.post('/logout', function(req, res, next) {
  * Endpoint for React app to get user info after authentication.
  */
 router.get('/login/success', (req, res, next)=>{
-  console.log('/login/success',req.session)
+  //console.log('/login/success',req.session)
   if (req.user) {
     res.json({
      message : "User Authenticated",
