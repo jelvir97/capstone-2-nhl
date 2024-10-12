@@ -3,8 +3,12 @@
 const requests = require('supertest')
 
 const app = require('../app.js')
+
 const MockAuth = require('../middleware/MockAuth.js')
 
+app.use(MockAuth)
+
+jest.mock('../middleware/MockAuth.js')
 
 const {
   NotFoundError,
@@ -41,14 +45,13 @@ const u2 = { googleID: 'u2',
     nhlGames : [] 
 }
 
-jest.mock('../middleware/MockAuth.js')
-
 describe('GET /users', ()=>{
 
     test('should work with admin user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user: u1.googleID};
+            req.user = u1
             next()
         })
         const res = await requests(app)
@@ -73,8 +76,9 @@ describe('GET /users', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u2;
-            next()
+            req.session.passport = {user: u2.googleID};
+            req.user = u2;
+            next();
         })
 
         const res = await requests(app).get('/users')
@@ -85,6 +89,7 @@ describe('GET /users', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session.passport = {}
             next()
         })
         const res = await requests(app).get('/users')
@@ -100,7 +105,8 @@ describe('GET /users/id', ()=>{
     test('should work with admin user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
         const res = await requests(app)
@@ -121,7 +127,8 @@ describe('GET /users/id', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u2;
+            req.session.passport = {user : u2.googleID};
+            req.user = u2
             next()
         })
 
@@ -133,6 +140,7 @@ describe('GET /users/id', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session.passport = {}
             next()
         })
         const res = await requests(app).get('/users/u1')
@@ -142,7 +150,8 @@ describe('GET /users/id', ()=>{
 
     test('fails 404 not found', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
         const res = await requests(app)
@@ -157,7 +166,8 @@ describe('DELETE /users/:id', ()=>{
 
     test('should work for admin', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
 
@@ -170,7 +180,8 @@ describe('DELETE /users/:id', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u2;
+            req.session.passport = {user : u2.googleID};
+            req.user = u2
             next()
         })
 
@@ -182,6 +193,7 @@ describe('DELETE /users/:id', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session.passport = {}
             next()
         })
         const res = await requests(app).delete('/users/u2')
@@ -193,7 +205,8 @@ describe('DELETE /users/:id', ()=>{
 describe('POST /users/:gameType/:gameID', ()=>{
     test('should work with authenticated user', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
 
@@ -204,7 +217,8 @@ describe('POST /users/:gameType/:gameID', ()=>{
 
     test('should fail with BadRequest', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
 
@@ -230,7 +244,8 @@ describe('DELETE /users/track/:gameType/:gameID', ()=>{
 
     test('should work with authenticated user', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
             next()
         })
         await requests(app).post('/users/track/nhl_games/game1')
@@ -238,14 +253,20 @@ describe('DELETE /users/track/:gameType/:gameID', ()=>{
         const res = await requests(app).delete('/users/track/nhl_games/game1')
         expect(res.statusCode).toBe(200)
 
+        MockAuth.mockImplementation((req,res,next)=>{
+            req.session.passport = {user : u1.googleID};
+            req.user = u1
+            next()
+        })
+
         const {body} = await requests(app).get('/users/u1')
-    
         expect(body.nhlGames).toEqual([])
     })
 
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            res.session = { passport :{}}
             next()
         })
         const res = await requests(app).delete('/users/track/nhl_games/game1')
