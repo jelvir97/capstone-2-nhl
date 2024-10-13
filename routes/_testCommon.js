@@ -1,7 +1,7 @@
 const db = require("../db.js");
 
-const User = require('../models/users.js')
-const NHL_Games = require('../models/nhlGames.js')
+const User = require("../models/users.js");
+const NHL_Games = require("../models/nhlGames.js");
 
 async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
@@ -11,25 +11,27 @@ async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM nhl_games_users");
 
-  await User.register(
-            { googleID: 'u1',
-              firstName: 'u1-first',
-              lastName:  'u1-last',
-              email: 'u1@test.com',
-              isAdmin: true })
-  
-  await User.register(
-            { googleID: 'u2',
-              firstName: 'u2-first',
-              lastName:  'u2-last',
-              email: 'u2@test.com',
-              isAdmin: false })
+  await User.register({
+    googleID: "u1",
+    firstName: "u1-first",
+    lastName: "u1-last",
+    email: "u1@test.com",
+    isAdmin: true,
+  });
 
-  await NHL_Games.addGame('game1')
+  await User.register({
+    googleID: "u2",
+    firstName: "u2-first",
+    lastName: "u2-last",
+    email: "u2@test.com",
+    isAdmin: false,
+  });
 
-  await NHL_Games.addGame('game2')
+  await NHL_Games.addGame("game1");
 
-  await User.track('game1','u2','nhl_games')
+  await NHL_Games.addGame("game2");
+
+  await User.track("game1", "u2", "nhl_games");
 }
 
 async function commonBeforeEach() {
@@ -43,7 +45,6 @@ async function commonAfterEach() {
 async function commonAfterAll() {
   await db.end();
 }
-
 
 module.exports = {
   commonBeforeAll,

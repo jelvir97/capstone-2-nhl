@@ -52,7 +52,6 @@ describe("register", function () {
     expect(found.rows.length).toEqual(1);
     expect(found.rows[0].is_admin).toEqual(true);
   });
-
 });
 
 /************************************** findAll */
@@ -90,7 +89,7 @@ describe("get", function () {
       lastName: "U2L",
       email: "u2@email.com",
       isAdmin: false,
-      nhlGames:[]
+      nhlGames: [],
     });
   });
 
@@ -102,7 +101,7 @@ describe("get", function () {
       lastName: "U1L",
       email: "u1@email.com",
       isAdmin: false,
-      nhlGames:['game1','game2']
+      nhlGames: ["game1", "game2"],
     });
   });
 
@@ -125,8 +124,7 @@ describe("get", function () {
 describe("remove", function () {
   test("works", async function () {
     await User.remove("u1");
-    const res = await db.query(
-        "SELECT * FROM users WHERE google_id='u1'");
+    const res = await db.query("SELECT * FROM users WHERE google_id='u1'");
     expect(res.rows.length).toEqual(0);
   });
 
@@ -142,73 +140,71 @@ describe("remove", function () {
 
 /******************************* track */
 
-describe('track', ()=>{
-  
-  test('works', async()=>{
-    const res = await User.track('game1','u2','nhl_games')
-    expect(res).toEqual({msg: `u2 tracking game1`})
-  })
+describe("track", () => {
+  test("works", async () => {
+    const res = await User.track("game1", "u2", "nhl_games");
+    expect(res).toEqual({ msg: `u2 tracking game1` });
+  });
 
-  test('works with new gameID', async ()=>{
-    const res = await User.track('newGame','u2','nhl_games');
-    expect(res).toEqual({msg: `u2 tracking newGame`})
-    
-  })
+  test("works with new gameID", async () => {
+    const res = await User.track("newGame", "u2", "nhl_games");
+    expect(res).toEqual({ msg: `u2 tracking newGame` });
+  });
 
-  test('fails user not found', async ()=>{
-    expect.assertions(1)
+  test("fails user not found", async () => {
+    expect.assertions(1);
     try {
-      await User.track('game1','not-a-user','nhl_games');
+      await User.track("game1", "not-a-user", "nhl_games");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
-  })
+  });
 
-  test('fails with BadRequestError; no gameType', async ()=>{
-    expect.assertions(1)
+  test("fails with BadRequestError; no gameType", async () => {
+    expect.assertions(1);
     try {
-      await User.track('game1','u2');
+      await User.track("game1", "u2");
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
-  })
-})
+  });
+});
 
 /********************************* untrack */
 
-describe('untrack', ()=>{
-  test('works', async ()=>{
-    await User.untrack('game1','u1','nhl_games')
-    const {nhlGames} = await User.get('u1');
+describe("untrack", () => {
+  test("works", async () => {
+    await User.untrack("game1", "u1", "nhl_games");
+    const { nhlGames } = await User.get("u1");
 
-    expect(nhlGames.length).toEqual(1)
-    expect(nhlGames).toEqual(['game2'])
-  })
+    expect(nhlGames.length).toEqual(1);
+    expect(nhlGames).toEqual(["game2"]);
+  });
 
-  test('fails user not found', async ()=>{
-    expect.assertions(1)
+  test("fails user not found", async () => {
+    expect.assertions(1);
     try {
-      await User.untrack('game1','not-a-user','nhl_games');
+      await User.untrack("game1", "not-a-user", "nhl_games");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
-  })
+  });
 
-  test('fails game not found', async ()=>{
-    expect.assertions(1)
+  test("fails game not found", async () => {
+    expect.assertions(1);
     try {
-      await User.untrack('game0','u1','nhl_games');
+      await User.untrack("game0", "u1", "nhl_games");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
-  })
+  });
 
-  test('fails with BadRequestError; no gameType', async ()=>{
-    expect.assertions(1)
+  test("fails with BadRequestError; no gameType", async () => {
+    expect.assertions(1);
     try {
-      await User.untrack('game1','u1');
+      await User.untrack("game1", "u1");
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
-  })
-})
+  });
+});

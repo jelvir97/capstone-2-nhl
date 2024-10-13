@@ -27,7 +27,7 @@ async function commonBeforeAll() {
       INSERT INTO nhl_games_users
           (google_id, game_id)
       VALUES ('u1', 'game1'),
-             ('u1', 'game2')`)
+             ('u1', 'game2')`);
 }
 
 async function commonBeforeEach() {
@@ -41,7 +41,6 @@ async function commonAfterEach() {
 async function commonAfterAll() {
   await db.end();
 }
-
 
 module.exports = {
   commonBeforeAll,

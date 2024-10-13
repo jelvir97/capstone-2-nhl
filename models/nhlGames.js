@@ -1,8 +1,8 @@
 "use strict";
 
 const db = require("../db");
-const {NHL_MODEL_URI} = require('../config')
-const bigqueryClient = require('../middleware/BigQueryClient')
+const { NHL_MODEL_URI } = require("../config");
+const bigqueryClient = require("../middleware/BigQueryClient");
 
 const {
   NotFoundError,
@@ -10,75 +10,73 @@ const {
   UnauthorizedError,
 } = require("../expressError");
 
-
 /** Related functions for NHL GAMES. */
 
 class NHL_Games {
-    /** Checks if game exists -- returns boolean */
-    static async getGame(gameID){
-        const result = await db.query(
-            `SELECT * FROM nhl_games
+  /** Checks if game exists -- returns boolean */
+  static async getGame(gameID) {
+    const result = await db.query(
+      `SELECT * FROM nhl_games
             WHERE game_id = $1
             `,
-            [gameID]
-        )
+      [gameID],
+    );
 
-        return result.rows[0] ? true : false;
-    }
+    return result.rows[0] ? true : false;
+  }
 
-    /** Add game_id to db
-     * 
-     *  Accepts: {game_id}
-     * 
-     * Returns : {game_id}
-    */
-    static async addGame(gameID){
-        try{const result = await db.query(
-            `INSERT INTO nhl_games
+  /** Add game_id to db
+   *
+   *  Accepts: {game_id}
+   *
+   * Returns : {game_id}
+   */
+  static async addGame(gameID) {
+    try {
+      const result = await db.query(
+        `INSERT INTO nhl_games
             (game_id)
             VALUES
             ($1)
             RETURNING game_id AS "gameID"
             `,
-            [gameID]
-        )
+        [gameID],
+      );
 
-        return result.rows[0]
-    }catch(err){
-        throw new BadRequestError(`gameID ${gameID} already exists.`)
+      return result.rows[0];
+    } catch (err) {
+      throw new BadRequestError(`gameID ${gameID} already exists.`);
     }
-    }
+  }
 
-    /**
-     * Gets predictions from BigQuery model
-     */
+  /**
+   * Gets predictions from BigQuery model
+   */
 
-    static async getPrediction (...gameIDs){
-        //TODO
-        const query = `
+  static async getPrediction(...gameIDs) {
+    //TODO
+    const query = `
         SELECT gameId AS gameID, homeProbMoney, awayProbMoney, 
                 homeOddsMoney, awayOddsMoney, homeProbModelMoney,
                 awayProbModelMoney, homeOddsModelMoney, awayOddsModelMoney,
                 expectedRoiHomeMoney, expectedRoiAwayMoney
         FROM ${NHL_MODEL_URI}
         WHERE gameId IN UNNEST(@gameID)
-        ORDER BY gameId`
+        ORDER BY gameId`;
 
-        const options = {
-            query: query,
-            location: 'US',
-            params:{gameID: gameIDs}
-        }
-        const [rows] = await bigqueryClient.query(options);
-        
+    const options = {
+      query: query,
+      location: "US",
+      params: { gameID: gameIDs },
+    };
+    const [rows] = await bigqueryClient.query(options);
 
-        const predictions = {}
-        for(let row of rows){
-            predictions[row.gameID] = row;
-        }
-        return predictions;
+    const predictions = {};
+    for (let row of rows) {
+      predictions[row.gameID] = row;
     }
-
+    return predictions;
+  }
 }
 
 module.exports = NHL_Games;
