@@ -49,7 +49,9 @@ describe('POST /nhl/predictions', ()=>{
     test('works with authenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session = {}
+            req.session.passport = {user : u1.googleID};
+            req.user = u1;
             next()
         })
 
@@ -69,7 +71,9 @@ describe('POST /nhl/predictions', ()=>{
 
     test('works with multiple gameIDs', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session = {}
+            req.session.passport = {user : u1.googleID};
+            req.user = u1;
             next()
         })
 
@@ -115,7 +119,9 @@ describe('POST /nhl/predictions', ()=>{
     test('fails with no gameIDs', async()=>{
         
         MockAuth.mockImplementation((req,res,next)=>{
-            req.session.user = u1;
+            req.session = {}
+            req.session.passport = {user : u1.googleID};
+            req.user = u1;
             next()
         })
 

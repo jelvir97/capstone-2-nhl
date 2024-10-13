@@ -50,6 +50,7 @@ describe('GET /users', ()=>{
     test('should work with admin user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user: u1.googleID};
             req.user = u1
             next()
@@ -76,6 +77,7 @@ describe('GET /users', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user: u2.googleID};
             req.user = u2;
             next();
@@ -89,6 +91,7 @@ describe('GET /users', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {}
             next()
         })
@@ -105,6 +108,7 @@ describe('GET /users/id', ()=>{
     test('should work with admin user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -127,6 +131,7 @@ describe('GET /users/id', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u2.googleID};
             req.user = u2
             next()
@@ -140,6 +145,7 @@ describe('GET /users/id', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {}
             next()
         })
@@ -150,6 +156,7 @@ describe('GET /users/id', ()=>{
 
     test('fails 404 not found', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -166,6 +173,7 @@ describe('DELETE /users/:id', ()=>{
 
     test('should work for admin', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -180,6 +188,7 @@ describe('DELETE /users/:id', ()=>{
 
     test('should fail with non-admin user', async ()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u2.googleID};
             req.user = u2
             next()
@@ -193,6 +202,7 @@ describe('DELETE /users/:id', ()=>{
     test('should fail with unauthenticated user', async ()=>{
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {}
             next()
         })
@@ -205,6 +215,7 @@ describe('DELETE /users/:id', ()=>{
 describe('POST /users/:gameType/:gameID', ()=>{
     test('should work with authenticated user', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -217,6 +228,7 @@ describe('POST /users/:gameType/:gameID', ()=>{
 
     test('should fail with BadRequest', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -244,6 +256,7 @@ describe('DELETE /users/track/:gameType/:gameID', ()=>{
 
     test('should work with authenticated user', async()=>{
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()
@@ -254,6 +267,7 @@ describe('DELETE /users/track/:gameType/:gameID', ()=>{
         expect(res.statusCode).toBe(200)
 
         MockAuth.mockImplementation((req,res,next)=>{
+            req.session = {}
             req.session.passport = {user : u1.googleID};
             req.user = u1
             next()

@@ -59,7 +59,6 @@ describe('addGame', ()=>{
 /*********************** getPrediction */
 
 jest.spyOn(bigqueryClient, 'query').mockImplementation(async(options)=>{
-    console.log(options.params.gameID)
     const data = options.params.gameID.map(g => ({ gameID: g, 
                                                     moneyAway:g+'moneyAway',
                                                     moneyHome: g+'moneyHome',

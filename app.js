@@ -17,6 +17,7 @@ const RS = require('connect-redis').default;
 
 const MockAuth = require('./middleware/MockAuth')
 
+
 const {
     NotFoundError,
 } = require("./expressError");
@@ -25,24 +26,18 @@ const {
 const app = express()
 
 app.use(express.json())
-
+app.use(MockAuth);
 app.enable('trust proxy');
 
 //Redis setup
-const redisClient = require('./middleware/redisClient')
-redisClient.connect().catch(console.error)
+const {redisClient} = require('./middleware/redisClient')
+
 
 const RedisStore = new RS({
   client: redisClient,
 })
 
-//Logs Redis Connection
-redisClient.on('error', function (err) {
-  console.log('Could not establish a connection with redis. ' + err);
-});
-redisClient.on('connect', function (err) {
-  console.log('Connected to redis successfully');
-});
+
 
 app.use(cookieParser());
 
@@ -79,7 +74,7 @@ app.use(
     })
   );
 
-if(process.env.NODE_ENV === 'test') app.use(MockAuth)
+//if(process.env.NODE_ENV === 'test') app.use(MockAuth)
 
 app.use('/', authRoutes)
 app.use('/users', userRoutes)
@@ -97,7 +92,7 @@ app.use(function (err, req, res, next) {
     if (process.env.NODE_ENV !== "test"); //console.error(err.stack)
     const status = err.status || 500;
     const message = err.message;
-    console.log(err)
+    console.log(err.message)
     return res.status(status).json({
         error: { message, status },
     });

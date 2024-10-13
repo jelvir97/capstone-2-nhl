@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand --forceExit"
   },
   "author": "",
   "license": "ISC",
@@ -27,5 +27,9 @@
     "pg": "^8.11.3",
     "redis": "^4.6.13",
     "supertest": "^6.3.4"
+  },
+  "devDependencies": {
+    "node-mocks-http": "^1.16.1",
+    "redis-mock": "^0.56.3"
   }
 }
