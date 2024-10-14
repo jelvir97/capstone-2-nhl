@@ -21,8 +21,11 @@ class NHL_API {
    *  date must be string : 'YYYY-MM-DD'
    */
   static async getSchedule(date = "now") {
+
+    // For Demo Purposes date is hardcoded to 2024-04-01
+    // Should Be : /v1/schedule/${date}
     const { data } = await axios.get(
-      `https://api-web.nhle.com/v1/schedule/${date}`,
+      `https://api-web.nhle.com/v1/schedule/2024-01-01`,
     );
 
     return data;

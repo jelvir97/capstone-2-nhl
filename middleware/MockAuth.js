@@ -6,7 +6,7 @@
  *
  */
 function MockAuth(req, res, next) {
-  if (!req.session) {
+  if (process.env.NODE_ENV === "test") {
     req.session = {};
     req.session.passport = {};
   }
